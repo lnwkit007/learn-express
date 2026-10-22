@@ -21,6 +21,7 @@ model User {
   email    String  @unique
   avatar   String?
   orders   Order[]
+  posts    Post[]
 }
 
 model Order {
@@ -45,3 +46,10 @@ model OrderProduct {
   product   Product @relation(fields: [productId], references: [id])
 }
 
+model Post {
+  id          Int    @id @default(autoincrement())
+  title       String
+  description String
+  userId      Int
+  user        User   @relation(fields: [userId], references: [id])
+}

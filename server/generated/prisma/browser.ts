@@ -37,3 +37,8 @@ export type Product = Prisma.ProductModel
  * 
  */
 export type OrderProduct = Prisma.OrderProductModel
+/**
+ * Model Post
+ * 
+ */
+export type Post = Prisma.PostModel
