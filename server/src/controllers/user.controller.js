@@ -158,6 +158,44 @@ exports.getOrdersByUser = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       message: "Error fetching user orders.",
+      error: error.message,
+    });
+  }
+};
+
+exports.getPostsByUser = async (req, res) => {
+  const id = Number(req.params.id);
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: id
+      }
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found."
+      });
+    }
+
+    const posts = await prisma.post.findMany({
+      where: {
+        userId: id,
+      },
+      select: {
+        id: true,
+        title: true,
+        description: true
+      }
+    });
+
+    res.status(200).json({
+      data: posts
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error fetching user posts.",
       error: error.message
     });
   }
