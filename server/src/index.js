@@ -1,8 +1,9 @@
 const express = require("express");
 const cors = require("cors");
+const prisma = require("./config/db");
 
 const app = express();
-const port = 3000;
+const port = process.env["PORT"];
 
 const userRoute = require("./routers/user.route");
 const productRoute = require("./routers/product.route");
@@ -18,7 +19,19 @@ app.use('/api/products', productRoute);
 app.use('/api/orders', orderRoute);
 app.use('/api/posts', postRoute);
 
+const checkConnection = async () => {
+  try {
+    await prisma.$connect();
+    await prisma.$queryRawUnsafe('SELECT 1');
+    console.log("Database connected successfully");
+    await prisma.$disconnect();
+  } catch (err) {
+    console.log('Database connection failed: ', err);
+    process.exit(1);
+  }
+}
+checkConnection();
 
 app.listen(port, () => {
-  console.log(`Server runing on ${port}`);
+  console.log(`Server running on ${port}`);
 });

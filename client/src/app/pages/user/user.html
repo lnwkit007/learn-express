@@ -1,0 +1,6 @@
+<p>user works!</p>
+@if (loading()) {
+    <p>loading ...</p>
+} @else {
+    <p>{{user()?.id}} - {{user()?.fname}} - {{user()?.lname}}</p>
+}

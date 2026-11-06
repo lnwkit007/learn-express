@@ -1,0 +1,10 @@
+<p>users works!</p>
+@if (loading()) {
+    <p>loading ...</p>
+} @else {
+    @for (user of users(); track user.id) {
+        <p>{{user.id}} - {{user.fname}} - {{user.lname}}</p>
+    } @empty {
+        <p>ไม่พบข้อมูล</p>
+    }
+}
