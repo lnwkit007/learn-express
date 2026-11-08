@@ -6,7 +6,7 @@ import { environment } from '../../../environments/environment.development';
 
 @Service()
 export class UserServices {
-    private http = inject(HttpClient);
+    private readonly http = inject(HttpClient);
 
     getUsers() {
         return this.http.get<ApiResponse<User[]>>(`${environment.apiUrl}/users`)
