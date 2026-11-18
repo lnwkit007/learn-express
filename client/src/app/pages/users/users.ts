@@ -1,13 +1,15 @@
-import { Component, inject, signal, OnInit, DestroyRef } from '@angular/core';
+import { Component, inject, signal, OnInit, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
 import { UserServices } from '../../services/user/user';
-import { User } from '../../interfaces/User';
+import { User } from '../../model/User';
 import { finalize } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { RouterLink } from '@angular/router';
 
 @Component({
-  imports: [],
+  imports: [RouterLink],
   selector: 'app-users',
   templateUrl: './users.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Users implements OnInit {
   private readonly userServices = inject(UserServices);

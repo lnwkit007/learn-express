@@ -8,7 +8,7 @@ exports.getProducts = async (req, res) => {
   });
 };
 
-exports.getProductId = async (req, res) => {
+exports.getProduct = async (req, res) => {
   const id = Number(req.params.id);
 
   const product = await prisma.product.findUnique({
@@ -109,6 +109,11 @@ exports.deleteProduct = async (req, res) => {
       return res.status(409).json({
         message: "Product not found.",
       });
+    }
+    if (error.code === "P2003") {
+      return res.status(500).json({
+        message: "This product cannot be deleted because it is included in an active order."
+      })
     }
 
     res.status(500).json({

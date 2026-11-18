@@ -1,6 +1,6 @@
 import { Component, inject, signal, OnInit, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
 import { UserServices } from '../../services/user/user';
-import { User as UserModel } from '../../interfaces/User';
+import { User as UserModel } from '../../model/User';
 import { finalize } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -21,7 +21,7 @@ export class User implements OnInit {
   protected readonly loading = signal<boolean>(false);
   protected readonly error = signal<string | null>(null);
 
-  ngOnInit(): void {``
+  ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
 
     if (id) {
@@ -30,6 +30,10 @@ export class User implements OnInit {
   }
 
   fetchUser(id: number): void {
+    if (this.loading()) {
+      return;
+    }
+
     this.loading.set(true);
 
     this.userServices.getUser(id)

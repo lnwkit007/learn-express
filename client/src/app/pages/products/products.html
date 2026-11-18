@@ -1,0 +1,24 @@
+<p>products works!</p>
+<a routerLink="/products/new" class="border">เพิ่มสินค้า</a>
+<p role="alert" class="text-red-500">{{deletError()}}</p>
+@if (loading()) {
+<p>loading ...</p>
+} @else {
+<div class="flex flex-col gap-3">
+    @for (product of products(); track product.id) {
+    <div class="border border-red-500">
+        <p>{{product.id}} - {{product.name}} - {{product.price}}</p>
+        <p>รหัสสินค้า : {{ product.id }}</p>
+        <p>ชื่อ : {{product.name}}</p>
+        <p>ราคา : {{product.price}}</p>
+        <a routerLink="/products/{{product.id}}" class="border border-blue-500">ดูรายละเอียด</a>
+        <a routerLink="/products/{{product.id}}/edit" class="border border-green-500">แก้ไขสินค้า</a>
+        <button type="button" (click)="DeleteProduct(product.id)" [disabled]="deletting()" class="border cursor-pointer">
+            {{deletting() ? "กำลังลบข้อมูล ..." : "ลบข้อมูล"}}
+        </button>
+    </div>
+    } @empty {
+    <p>ไม่พบข้อมูล</p>
+    }
+</div>
+}

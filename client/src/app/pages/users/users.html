@@ -1,10 +1,18 @@
 <p>users works!</p>
 @if (loading()) {
-    <p>loading ...</p>
+<p>loading ...</p>
 } @else {
+<div class="flex flex-col gap-3">
     @for (user of users(); track user.id) {
+    <div class="border border-red-500">
         <p>{{user.id}} - {{user.fname}} - {{user.lname}}</p>
+        <p>รหัส : {{user.id}}</p>
+        <p>ชื่อ : {{user.fname}}</p>
+        <p>นามสกุล : {{user.lname}}</p>
+        <a routerLink="/users/{{user.id}}" class="border border-blue-500">ดูรายละเอียด</a>
+    </div>
     } @empty {
-        <p>ไม่พบข้อมูล</p>
+    <p>ไม่พบข้อมูล</p>
     }
+</div>
 }
