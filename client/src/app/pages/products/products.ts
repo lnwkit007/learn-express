@@ -1,12 +1,10 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal, } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal, DestroyRef } from '@angular/core';
 import { ProductService } from '../../services/product/product';
 import { Product } from '../../model/Product';
 import { finalize } from 'rxjs';
-import { DestroyRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
-
 
 @Component({
   imports: [RouterLink],
@@ -20,10 +18,10 @@ export class Products implements OnInit {
 
   protected readonly products = signal<Product[]>([]);
   protected readonly loading = signal<boolean>(false);
-  protected readonly error = signal<string | null>(null);
+  protected readonly loadError = signal<string | null>(null);
 
-  protected readonly deletting = signal<boolean>(false);
-  protected readonly deletError = signal<string | null>(null);
+  protected readonly deleting = signal<boolean>(false);
+  protected readonly deleteError = signal<string | null>(null);
 
   ngOnInit(): void {
     this.fetchProducts();
@@ -35,7 +33,7 @@ export class Products implements OnInit {
     }
 
     this.loading.set(true);
-    this.error.set(null);
+    this.loadError.set(null);
 
     this.productService.getProducts()
       .pipe(
@@ -49,32 +47,32 @@ export class Products implements OnInit {
           this.products.set(data);
         },
         error: (err) => {
-          this.error.set(`Fetch data error : ${err}`);
+          this.loadError.set(`Fetch data error : ${err.error?.message ?? err.message}`);
         }
       })
   }
 
-  protected DeleteProduct(id: number) {
-    if (this.deletting()) {
+  protected deleteProduct(id: number) {
+    if (this.deleting()) {
       return;
     }
 
-    this.deletting.set(true);
-    this.deletError.set(null);
+    this.deleting.set(true);
+    this.deleteError.set(null);
 
     this.productService.deleteProduct(id)
     .pipe(
       takeUntilDestroyed(this.destroyRef),
       finalize(() => {
-        this.deletting.set(false);
+        this.deleting.set(false);
       })
     )
     .subscribe({
       next: () => {
-        this.fetchProducts()
+        this.products.update(items => items.filter(product => product.id !== id))
       },
       error: (err: HttpErrorResponse) => {
-        this.deletError.set(err.error.message)
+        this.deleteError.set(err.error?.message ?? 'เกิดข้อผิดพลาดกรุณาลองใหม่อีกครั้ง')
       }
     })
   }

@@ -1,4 +1,36 @@
-<p>user-create works!</p>
-<!-- <form [formGroup]="form" (submit)="onSubmit()">
-    
-</form> -->
+@if (error()) {
+    <p class="text-red-500">{{error()}}</p>
+}
+<form [formGroup]="formCreateUser" (ngSubmit)="onSubmit()" novalidate>
+    <div>
+        <label for="fname">ชื่อ</label>
+        <input type="text" id="fname" formControlName="fname" class="border">
+        @if (formCreateUser.controls.fname.invalid && formCreateUser.controls.fname.touched) {
+            <small role="alert">กรุณากรอกชื่อ</small>
+        }
+    </div>
+    <div>
+        <label for="lname">นามสกุล</label>
+        <input type="text" id="lname" formControlName="lname" class="border">
+        @if (formCreateUser.controls.lname.invalid && formCreateUser.controls.lname.touched) {
+            <small role="alert">กรุณากรอกนามสกุล</small>
+        }
+    </div>
+    <div>
+        <label for="username">ชื่อผู้ใช้</label>
+        <input type="text" id="username" formControlName="username" class="border">
+        @if (formCreateUser.controls.username.invalid && formCreateUser.controls.username.touched) {
+            <small role="alert">กรุณากรอกชื่อผู้ใช้</small>
+        }
+    </div>
+    <div>
+        <label for="email">อีเมล</label>
+        <input type="email" id="email" formControlName="email" class="border">
+        @if (formCreateUser.controls.email.invalid && formCreateUser.controls.email.touched) {
+            <small role="alert">กรุณากรอกอีเมล</small>
+        }
+    </div>
+    <button type="submit" [disabled]="submitting()" class="border border-blue-500">
+        {{submitting() ? "กำลังบันทึก ..." : "บันทึก"}}
+    </button>
+</form>

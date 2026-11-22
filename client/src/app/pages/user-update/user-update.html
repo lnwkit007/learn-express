@@ -1,0 +1,43 @@
+@if (loading()) {
+    <p>loading ...</p>
+} @else if (loadError()) {
+    <p class="text-red-500">{{loadError()}}</p>
+} @else {
+    @if (error()) {
+        <p class="text-red-500">{{error()}}</p>
+    }
+    <form [formGroup]="formUpdateUser" (ngSubmit)="onSubmit()" novalidate>
+        <div>
+            <label for="fname">ชื่อ</label>
+            <input type="text" id="fname" formControlName="fname" class="border">
+            @if (formUpdateUser.controls.fname.invalid && formUpdateUser.controls.fname.touched) {
+                <small role="alert">กรุณากรอกชื่อ</small>
+            }
+        </div>
+        <div>
+            <label for="lname">นามสกุล</label>
+            <input type="text" id="lname" formControlName="lname" class="border">
+            @if (formUpdateUser.controls.lname.invalid && formUpdateUser.controls.lname.touched) {
+                <small role="alert">กรุณากรอกนามสกุล</small>
+            }
+        </div>
+        <div>
+            <label for="username">ชื่อผู้ใช้</label>
+            <input type="text" id="username" formControlName="username" class="border">
+            @if (formUpdateUser.controls.username.invalid && formUpdateUser.controls.username.touched) {
+                <small role="alert">กรุณากรอกชื่อผู้ใช้</small>
+            }
+        </div>
+        <div>
+            <label for="email">อีเมล</label>
+            <input type="email" id="email" formControlName="email" class="border">
+            @if (formUpdateUser.controls.email.invalid && formUpdateUser.controls.email.touched) {
+                <small role="alert">กรุณากรอกอีเมล</small>
+            }
+        </div>
+    
+        <button type="submit" [disabled]="submitting()" class="border">
+            {{submitting() ? "กำลังบันทึก ..." : "บันทึก"}}
+        </button>
+    </form>
+}

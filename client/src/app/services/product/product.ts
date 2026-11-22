@@ -1,6 +1,6 @@
 import { inject, Service } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { Product, ApiResponse } from '../../model/Product';
 
@@ -31,8 +31,8 @@ export class ProductService {
             )
     }
 
-    postProduct(name: string, price: number): Observable<Product> {
-        return this.http.post<ApiResponse<Product>>(`${environment.apiUrl}/products`, { name, price })
+    postProduct(body: CreateProductRequest): Observable<Product> {
+        return this.http.post<ApiResponse<Product>>(`${environment.apiUrl}/products`, body)
             .pipe(
                 map((res) => res.data),
                 catchError(this.handleError)
@@ -47,11 +47,11 @@ export class ProductService {
             )
     }
 
-    deleteProduct(id: number) {
-        return this.http.delete(`${environment.apiUrl}/products/${id}`)
-        .pipe(
-            catchError(this.handleError)
-        )
+    deleteProduct(id: number): Observable<{ message: string }> {
+        return this.http.delete<{ message: string, error: HttpErrorResponse }>(`${environment.apiUrl}/products/${id}`)
+            .pipe(
+                catchError(this.handleError)
+            )
     }
 
     private handleError(error: HttpErrorResponse) {

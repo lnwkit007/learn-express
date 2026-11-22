@@ -23,13 +23,13 @@ export class ProductUpdate implements OnInit {
   private productId = 0;
 
   protected readonly submitting = signal<boolean>(false);
-  protected readonly loading = signal<boolean>(false);
+  protected readonly loading = signal<boolean>(true);
   protected readonly loadError = signal<string | null>(null);
   protected readonly error = signal<string | null>(null);
 
   protected readonly form = this.fb.nonNullable.group({
     name: ['', [Validators.required,  Validators.pattern(/\S/), Validators.maxLength(100)]],
-    price: this.fb.control<number | null>(null, [Validators.required, Validators.minLength(0)])
+    price: this.fb.control<number | null>(null, [Validators.required, Validators.min(0)])
   })
 
   ngOnInit(): void {
@@ -77,7 +77,7 @@ export class ProductUpdate implements OnInit {
     const body = this.buildChanges();
 
     if (Object.keys(body).length === 0) {
-      this.router.navigate(['/products', this.productId]);
+      this.router.navigate(['/products']);
       return;
     }
 
@@ -93,7 +93,7 @@ export class ProductUpdate implements OnInit {
       )
       .subscribe({
         next: () => {
-          this.router.navigate(['/products', this.productId]);
+          this.router.navigate(['/products']);
         },
         error: (err: HttpErrorResponse) => {
           this.error.set(this.toMessage(err));

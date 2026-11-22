@@ -58,13 +58,51 @@ exports.updateProduct = async (req, res) => {
   try {
     const id = Number(req.params.id);
 
+    if (!Number.isInteger(id) || id <= 0) {
+      return res.status(400).json({
+        message: "Invalid product id."
+      });
+    }
+
+    const data = {}
+
+    if (req.body.name !== undefined) {
+      const name = String(req.body.name).trim();
+
+      if (!name) {
+        return res.status(400).json({
+          message: "Product name cannot be empty."
+        });
+      }
+
+      data.name = name;
+    }
+
+    if (req.body.price !== undefined) {
+      const price = Number(req.body.price);
+
+      if (!Number.isInteger(price) || price < 0) {
+        return res.status(400).json({
+          message: "Price must be a non-negative integer."
+        });
+      }
+
+      data.price = price;
+    }
+
+    if (Object.keys(data).length === 0) {
+      return res.status(400).json({
+        message: "No fields provided to update."
+      });
+    }
+
     const product = await prisma.product.update({
       where: {
         id: id,
       },
       data: {
-        name: req.body.name,
-        price: Number(req.body.price),
+        name: data.name,
+        price: data.price
       },
     });
 

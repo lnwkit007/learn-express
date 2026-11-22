@@ -1,16 +1,16 @@
-<form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+<form [formGroup]="formCreateProduct" (ngSubmit)="onSubmit()" novalidate>
     <div>
         <label for="name">ชื่อสินค้า</label>
         <input type="text" id="name" formControlName="name" maxlength="100" class="border border-red-500">
-        @if (form.controls.name.touched && form.controls.name.invalid) {
+        @if (formCreateProduct.controls.name.touched && formCreateProduct.controls.name.invalid) {
             <small role="alert">กรุณากรอกชื่อสินค้า</small>
         }
     </div>
 
     <div>
         <label for="price">ราคาสินค้า</label>
-        <input type="number" id="price" formControlName="price" min="0" step="0.01" class="border border-red-500">
-        @if (form.controls.price.touched && form.controls.price.invalid) {
+        <input type="number" id="price" formControlName="price" step="1" min="0" class="border border-red-500">
+        @if (formCreateProduct.controls.price.touched && formCreateProduct.controls.price.invalid) {
             <small role="alert">กรุณากรอกราคาที่ไม่ติดลบ</small>
         }
     </div>

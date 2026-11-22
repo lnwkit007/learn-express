@@ -23,9 +23,11 @@ export class Product implements OnInit {
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
 
-    if (id) {
-      this.fetchProduct(id);
+    if (!Number.isInteger(id) || id <= 0) {
+      this.error.set('รหัสสินค้าไม่ถูกต้อง');
+      return;
     }
+    this.fetchProduct(id);
   }
 
   private fetchProduct(id: number): void {
@@ -48,7 +50,7 @@ export class Product implements OnInit {
           this.product.set(data);
         },
         error: (err) => {
-          this.error.set(`Fetch data error : ${err}`);
+          this.error.set(`Fetch data error : ${err.error?.message ?? err.message}`);
         }
       })
   }

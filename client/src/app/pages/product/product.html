@@ -1,4 +1,12 @@
-<p>product works!</p>
-<p>รหัสสินค้า : {{ product()?.id }}</p>
-<p>ชื่อสินค้า : {{ product()?.name }}</p>
-<p>ราคาสินค้า : {{ product()?.price }}</p>
+
+@if (loading()) {
+    <p>loading ...</p>
+} @else {
+    @if (error()) {
+        <p class="text-red-500">{{error()}}</p>
+    } @else {
+        <p>รหัสสินค้า : {{ product()?.id }}</p>
+        <p>ชื่อสินค้า : {{ product()?.name }}</p>
+        <p>ราคาสินค้า : {{ product()?.price }}</p>
+    }
+}

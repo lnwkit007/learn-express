@@ -1,5 +1,5 @@
 import { Component, inject, signal, OnInit, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
-import { UserServices } from '../../services/user/user';
+import { UserService } from '../../services/user/user';
 import { User as UserModel } from '../../model/User';
 import { finalize } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
@@ -13,7 +13,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class User implements OnInit {
-  private readonly userServices = inject(UserServices);
+  private readonly userService = inject(UserService);
   private readonly route = inject(ActivatedRoute);
   private readonly destroyRef = inject(DestroyRef);
 
@@ -24,19 +24,23 @@ export class User implements OnInit {
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
 
-    if (id) {
-      this.fetchUser(id);
+    if (!Number.isInteger(id) || id <= 0) {
+      this.error.set('รหัสผู้ใช้ไม่ถูกต้อง');
+      return;
     }
+    
+    this.fetchUser(id);
   }
 
-  fetchUser(id: number): void {
+  private fetchUser(id: number): void {
     if (this.loading()) {
       return;
     }
 
     this.loading.set(true);
+    this.error.set(null);
 
-    this.userServices.getUser(id)
+    this.userService.getUser(id)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         finalize(() => {
@@ -47,7 +51,7 @@ export class User implements OnInit {
           this.user.set(data);
         },
         error: (err) => {
-          this.error.set(`Fetch data error : ${err}`);
+          this.error.set(`Fetch data error : ${err.error?.message ?? err.message}`);
         }
       })
   }

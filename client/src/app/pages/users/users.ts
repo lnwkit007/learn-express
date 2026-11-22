@@ -1,5 +1,5 @@
 import { Component, inject, signal, OnInit, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
-import { UserServices } from '../../services/user/user';
+import { UserService } from '../../services/user/user';
 import { User } from '../../model/User';
 import { finalize } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -12,7 +12,7 @@ import { RouterLink } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Users implements OnInit {
-  private readonly userServices = inject(UserServices);
+  private readonly userService = inject(UserService);
   private readonly destroyRef = inject(DestroyRef);
 
   protected readonly users = signal<User[]>([]);
@@ -31,7 +31,7 @@ export class Users implements OnInit {
     this.loading.set(true);
     this.error.set(null);
 
-    this.userServices.getUsers()
+    this.userService.getUsers()
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         finalize(() => {
@@ -42,7 +42,7 @@ export class Users implements OnInit {
           this.users.set(data)
         },
         error: (err) => {
-          this.error.set(`Fetch data error : ${err}`);
+          this.error.set(`Fetch data error : ${err.error?.message ?? err.message}`);
         }
       })
   }
