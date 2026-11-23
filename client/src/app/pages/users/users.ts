@@ -19,6 +19,9 @@ export class Users implements OnInit {
   protected readonly loading = signal<boolean>(false);
   protected readonly error = signal<string | null>(null);
 
+  protected readonly deleting = signal<boolean>(false);
+  protected readonly deleteError = signal<string | null>(null);
+
   ngOnInit(): void {
     this.fetchUsers();
   }
@@ -45,5 +48,29 @@ export class Users implements OnInit {
           this.error.set(`Fetch data error : ${err.error?.message ?? err.message}`);
         }
       })
+  }
+
+  protected deleteUser(id: number): void {
+    if (this.deleting()) {
+      return;
+    }
+
+    this.deleting.set(true);
+    this.deleteError.set(null);
+
+    this.userService.deleteUser(id)
+    .pipe(
+      takeUntilDestroyed(this.destroyRef),
+      finalize(() => {
+        this.deleting.set(false);
+      })
+    ).subscribe({
+      next: () => {
+        this.users.update(items => items.filter(user => user.id !== id))
+      },
+      error: (err) => {
+        this.deleteError.set(err.error?.message ?? err.message)
+      }
+    })
   }
 }

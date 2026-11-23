@@ -2,22 +2,29 @@
 @if (loading()) {
 <p>loading ...</p>
 } @else {
-    @if(error()) {
-        <p class="text-red-500">{{error()}}</p>
-    } @else {
-        <div class="flex flex-col gap-3">
-            @for (user of users(); track user.id) {
-            <div class="border border-red-500">
-                <p>{{user.id}} - {{user.fname}} - {{user.lname}}</p>
-                <p>รหัส : {{user.id}}</p>
-                <p>ชื่อ : {{user.fname}}</p>
-                <p>นามสกุล : {{user.lname}}</p>
-                <a routerLink="/users/{{user.id}}" class="border border-blue-500">ดูรายละเอียด</a>
-                <a routerLink="/users/{{user.id}}/edit" class="border border-green-500">แก้ไข</a>
-            </div>
-            } @empty {
-                <p>ไม่พบข้อมูล</p>
-            }
-        </div>
+@if(error()) {
+<p class="text-red-500">{{error()}}</p>
+} @else {
+
+    @if (deleteError()) {
+        <p class="text-red-500" role="alert">{{deleteError()}}</p>
     }
+    <div class="flex flex-col gap-3">
+        @for (user of users(); track user.id) {
+        <div class="border border-red-500">
+            <p>{{user.id}} - {{user.fname}} - {{user.lname}}</p>
+            <p>รหัส : {{user.id}}</p>
+            <p>ชื่อ : {{user.fname}}</p>
+            <p>นามสกุล : {{user.lname}}</p>
+            <a routerLink="/users/{{user.id}}" class="border border-blue-500">ดูรายละเอียด</a>
+            <a routerLink="/users/{{user.id}}/edit" class="border border-green-500">แก้ไข</a>
+            <button class="border border-red-500" [disabled]="deleting()" (click)="deleteUser(user.id)">
+                {{deleting() ? "กำลังลบ ...": "ลบผู้ใช้"}}
+            </button>
+        </div>
+        } @empty {
+        <p>ไม่พบข้อมูล</p>
+        }
+    </div>
+}
 }

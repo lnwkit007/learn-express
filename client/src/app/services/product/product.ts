@@ -48,7 +48,7 @@ export class ProductService {
     }
 
     deleteProduct(id: number): Observable<{ message: string }> {
-        return this.http.delete<{ message: string, error: HttpErrorResponse }>(`${environment.apiUrl}/products/${id}`)
+        return this.http.delete<{ message: string }>(`${environment.apiUrl}/products/${id}`)
             .pipe(
                 catchError(this.handleError)
             )

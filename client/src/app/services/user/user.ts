@@ -49,6 +49,13 @@ export class UserService {
         )
     }
 
+    deleteUser(id: number): Observable<{message: string}> {
+        return this.http.delete<{message: string}>(`${environment.apiUrl}/users/${id}`)
+        .pipe(
+            catchError(this.handleError)
+        )
+    }
+
     private handleError(error: HttpErrorResponse) {
         console.log("Api error : ", error);
         return throwError(() => error);
