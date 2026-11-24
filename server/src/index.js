@@ -5,6 +5,7 @@ const prisma = require("./config/db");
 const app = express();
 const port = process.env["PORT"];
 
+const authRoute = require("./routers/auth.route");
 const userRoute = require("./routers/user.route");
 const productRoute = require("./routers/product.route");
 const orderRoute = require("./routers/order.route");
@@ -14,6 +15,7 @@ app.use(cors());
 app.use(express.json());
 
 
+app.use('/api/auth', authRoute);
 app.use('/api/users', userRoute);
 app.use('/api/products', productRoute);
 app.use('/api/orders', orderRoute);

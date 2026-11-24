@@ -14,18 +14,20 @@ datasource db {
 }
 
 model User {
-  id       Int     @id @default(autoincrement())
+  id       Int        @id @default(autoincrement())
   fname    String
   lname    String
-  username String  @unique
-  email    String  @unique
+  username String     @unique
+  email    String     @unique
   avatar   String?
+  password String
+  role     users_role @default(employee)
   orders   Order[]
   posts    Post[]
 }
 
 model Order {
-  id       Int            @id @default(autoincrement())
+  id       Int             @id @default(autoincrement())
   userId   Int
   user     User           @relation(fields: [userId], references: [id])
   products OrderProduct[]
@@ -52,4 +54,9 @@ model Post {
   description String
   userId      Int
   user        User   @relation(fields: [userId], references: [id])
+}
+
+enum users_role {
+  admin
+  employee
 }
